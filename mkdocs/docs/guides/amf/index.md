@@ -149,6 +149,41 @@ which may be baked into SMPTE ST 2065-1 ACES image data, and it is essential to
 communicate to downstream software that it has already been applied, as to not
 double-apply the transform, or invert it if necessary.
 
+The examples below show the use of the applied tag in different scenarios.  In
+the first example, the AMF specifies that none of the processing steps has been
+baked to input media (i.e.`applied=false` for all blocks).  In this case, the
+recipient of the AMF should process the input media through all of the
+transforms specified in the AMF.
+
+```mermaid
+graph LR
+A1[Input Media] --> B(Input Transform<br><code>applied=false</code>)
+subgraph AMF Complete Processing Path Description
+    B --> C1(Look Transform<br><code>applied=false</code?)
+    C1 --> D1(Output Transform<br><code>applied=false</code>)
+end
+```
+<figure markdown>
+  <figcaption>Example AMF processing path with `applied=false` tags</figcaption>
+</figure>
+
+In the next example, the AMF specifies that the of the Input Transform and the
+Look Transform have been baked to input media (i.e.`applied=true`).  In this
+case, the recipient of the AMF should process the input media through only the
+Output Transform specified in the AMF. 
+
+```mermaid
+graph LR
+subgraph AMF Complete Processing Path Description
+    B(Input Transform<br><code>applied=true</code>) --> C1(Look Transform<br><code>applied=true</code?)
+    C1 --> D1(Output Transform<br><code>applied=false</code>)
+end
+A1[Input Media] --> D1
+```
+<figure markdown>
+  <figcaption>Example AMF processing path where Input Transform and Look Transform have `applied=true` tags</figcaption>
+</figure>
+
 
 Lifecycle of AMF
 ----------------
